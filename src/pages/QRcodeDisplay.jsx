@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function QRcodeDisplay() {
+  let a = 3;
   const navigate = useNavigate();
   const [qrCodeImage, setQrCodeImage] = useState(null);
   const handleGenerateQRCode = async () => {
