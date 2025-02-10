@@ -6,8 +6,6 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
-    allowedHosts: [
-      // "9699-2401-4900-3b1c-602d-3978-1841-f496-3b3.ngrok-free.app",
-    ], // Add your host here
+    allowedHosts: ["digimenu-frontend.vercel.app/"], // Add your host here
   },
 });
