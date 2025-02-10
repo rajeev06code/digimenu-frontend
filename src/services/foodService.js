@@ -4,7 +4,7 @@ import axios from "axios";
 export const getFoodItems = async () => {
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_BASE_URL}/food-items`
+      `${import.meta.env.VITE_BASE_URL}/api/food-items`
     );
     return response.data;
   } catch (error) {
@@ -18,7 +18,7 @@ export const getFoodItems = async () => {
 export const createFoodItem = async (formData) => {
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_BASE_URL}/food-items`,
+      `${import.meta.env.VITE_BASE_URL}/api/food-items`,
       {
         method: "POST",
         body: formData, // Sending FormData directly for file upload
