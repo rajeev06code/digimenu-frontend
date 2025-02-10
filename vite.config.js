@@ -6,6 +6,6 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
-    allowedHosts: ["digimenu-frontend.vercel.app/"], // Add your host here
+    allowedHosts: ["digimenu-frontend.vercel.app"], // Add your host here
   },
 });
