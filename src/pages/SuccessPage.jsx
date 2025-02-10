@@ -9,7 +9,7 @@ function SuccessPage() {
   // Simulating order details (replace with actual data passing)
   const orderDetails = {
     orderId: "KH1234567890",
-    customerName: "Rahul",
+    customerName: "Rajeev",
     items: [
       { name: "Handmade Bihari Samosa", quantity: 2, price: 49.5 },
       { name: "Litti Chokha", quantity: 1, price: 10.5 },
@@ -129,7 +129,7 @@ function SuccessPage() {
 
         {/* Back Button */}
         <button
-          onClick={() => navigate("/menu")}
+          onClick={() => navigate("/kranti-hotel/4/menu")}
           className="w-full bg-[#FF9D23]/10 text-[#FF9D23] rounded-xl py-3 font-medium hover:bg-[#FF9D23]/20 transition-colors"
         >
           Back to Menu

@@ -98,7 +98,7 @@ function CartItems() {
           </div>
 
           {/* Cart Items */}
-          <div className="space-y-2 mb-24">
+          <div className="space-y-2 mb-32">
             {cartItems.map((item) => (
               <div
                 key={item.id}
@@ -152,33 +152,37 @@ function CartItems() {
 
           {/* Footer */}
           <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#FF9D23]/10">
-            <div className="max-w-2xl mx-auto p-2 space-y-1.5">
+            <div className="max-w-2xl mx-auto p-4 space-y-2.5">
               {/* Price Details */}
-              <div className="flex justify-between text-[#422006] font-semibold text-base pb-1.5 border-b border-[#FF9D23]/10">
+              <div className="flex justify-between text-[#422006] font-semibold text-xl sm:text-base pb-2.5 border-b border-[#FF9D23]/10">
                 <span>Total Amount</span>
-                <span className="text-[#FF9D23]">₹{totalPrice.toFixed(2)}</span>
+                <span className="text-[#FF9D23] text-bold">
+                  ₹{totalPrice.toFixed(2)}
+                </span>
               </div>
 
               {/* Delivery Time */}
-              <div className="flex justify-between items-center py-1 px-2 bg-[#FF9D23]/5 rounded-lg">
+              <div className="flex justify-between items-center py-2 px-3 bg-[#FF9D23]/5 rounded-lg">
                 <div className="flex items-center gap-1.5 text-[#422006]">
                   <span className="text-base">⏳</span>
-                  <span className="text-xs">Estimated Delivery Time</span>
+                  <span className="text-xs sm:text-sm">
+                    Estimated Delivery Time
+                  </span>
                 </div>
-                <span className="font-semibold text-[#FF9D23] text-sm">
+                <span className="font-semibold text-[#FF9D23] text-sm sm:text-base">
                   45 mins
                 </span>
               </div>
 
               {/* Payment Buttons */}
-              <div className="flex gap-2 mt-1.5">
+              <div className="flex gap-3 mt-2.5">
                 <button
                   onClick={handleClickOpen}
-                  className="flex-1 py-2 rounded-lg text-[#422006] border border-[#FF9D23]/20 hover:bg-[#FF9D23]/5 transition-colors text-xs font-semibold"
+                  className="flex-1 py-4 rounded-lg text-[#422006] border border-[#FF9D23]/20 hover:bg-[#FF9D23]/5 transition-colors text-sm sm:text-base font-semibold"
                 >
                   Pay at Counter
                 </button>
-                <button className="flex-1 py-2 rounded-lg bg-[#FF9D23] text-white hover:bg-[#FF9D23] transition-colors text-xs font-semibold">
+                <button className="flex-1 py-4 rounded-lg bg-[#FF9D23] text-white hover:bg-[#FF9D23] transition-colors text-sm sm:text-base font-semibold">
                   Pay Online
                 </button>
               </div>

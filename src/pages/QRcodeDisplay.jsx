@@ -34,9 +34,9 @@ function QRcodeDisplay() {
   ];
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[#FFFAF4] p-6">
+    <div className="flex flex-col items-center justify-start min-h-screen bg-[#FFFAF4] p-6">
       {/* Header Section */}
-      <div className="text-center mb-8">
+      <div className="text-center mb-8 mt-12">
         <h1 className="text-3xl sm:text-4xl font-bold text-[#422006] mb-2">
           Welcome to <span className="text-[#FF9D23]">KRANTI HOTEL</span>
         </h1>
@@ -46,7 +46,7 @@ function QRcodeDisplay() {
       </div>
 
       {/* QR Code Box */}
-      <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-2 mb-2 w-full max-w-xs relative">
+      <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-2 mb-8 w-full max-w-xs relative">
         <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#FF9D23] text-white px-4 py-1 rounded-full text-sm font-medium">
           Table 4
         </div>

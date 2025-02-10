@@ -3,6 +3,7 @@ import { TextField } from "@material-ui/core";
 import { IoCloseOutline } from "react-icons/io5";
 import { useState, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { useNavigate } from "react-router-dom";
 
 // Custom styles for Material-UI components
 const useStyles = makeStyles({
@@ -52,6 +53,7 @@ const useStyles = makeStyles({
 });
 
 export default function AlertDialog({ open, onClose }) {
+  const navigate = useNavigate();
   const classes = useStyles();
   const [formData, setFormData] = useState({
     name: "",
@@ -120,6 +122,7 @@ export default function AlertDialog({ open, onClose }) {
     if (otp.length === 4) {
       // Handle final submission with OTP verification
       console.log("Final submission with:", formData);
+      navigate("/success");
       onClose();
     }
   };
