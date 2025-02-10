@@ -7,12 +7,14 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "tunnel:frontend": "npx localtunnel --port 5173"
   },
   "dependencies": {
     "@material-ui/core": "^4.12.4",
     "@tailwindcss/vite": "^4.0.3",
     "axios": "^1.7.9",
+    "localtunnel": "^2.0.2",
     "qrcode.react": "^4.2.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

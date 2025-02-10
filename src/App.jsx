@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import CartItems from "./pages/CartItems";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import ErrorBoundary from "../src/error/ErrorBoundary";
+import SuccessPage from "./pages/SuccessPage";
 
 // Lazy-loaded components
 const QRcodeDisplay = lazy(() => import("./pages/QRcodeDisplay"));
@@ -49,6 +50,10 @@ const appRouter = createBrowserRouter([
       </Suspense>
     ),
     // errorElement: <ErrorPage />,
+  },
+  {
+    path: "/success",
+    element: <SuccessPage />,
   },
 ]);
 

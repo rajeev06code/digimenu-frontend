@@ -33,6 +33,15 @@ function CartItems() {
       image:
         "https://res.cloudinary.com/dud1jwwji/image/upload/v1738855384/food-items/1738855381300-chicken.jpg.jpg",
     },
+    {
+      id: 3,
+      quantity: 1,
+      name: "Chicken masala (250g)",
+      price: 5.5,
+      rating: 5.0,
+      image:
+        "https://res.cloudinary.com/dud1jwwji/image/upload/v1738855384/food-items/1738855381300-chicken.jpg.jpg",
+    },
   ]);
   const [open, setOpen] = useState(false);
 
@@ -65,87 +74,115 @@ function CartItems() {
 
   return (
     <>
-      {" "}
       <AlertDialog
         title="Use Google's location service?"
         description="Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running."
         open={open}
         onClose={handleClose}
         onAgree={handleAgree}
-      />{" "}
-      <div className="bg-white min-h-screen p-4 max-w-md mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between pb-4">
-          <button className="text-2xl">
-            <IoMdArrowBack onClick={() => navigate(-1)} />
-          </button>
-          <h2 className="text-2xl font-bold">Cart</h2>
-          <button className="text-2xl"></button>
-        </div>
-
-        {/* Cart Items */}
-        <div className="space-y-4">
-          {cartItems.map((item) => (
-            <div
-              key={item.id}
-              className="flex items-center bg-white shadow-md rounded-lg p-3 border border-gray-200"
+      />
+      <div className="bg-[#FFFAF4] min-h-screen">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 py-4">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-6">
+            <button
+              onClick={() => navigate(-1)}
+              className="text-[#422006] hover:text-[#FF9D23] transition-colors"
             >
-              <img
-                src={item.image}
-                alt={item.name}
-                className="w-16 h-18 rounded-lg object-cover"
-              />
-              <div className="ml-4 flex-1">
-                <h5 className="text-sm font-semibold">{item.name}</h5>
-                <p className="text-gray-500 text-sm">{item.rating} ⭐</p>
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() => updateQuantity(item.id, -1)}
-                    className="bg-gray-200 px-2  rounded"
-                  >
-                    -
-                  </button>
-                  <span className="text-sm font-semibold">{item.quantity}</span>
-                  <button
-                    onClick={() => updateQuantity(item.id, 1)}
-                    className="bg-gray-200 px-2 rounded"
-                  >
-                    +
-                  </button>
+              <IoMdArrowBack className="text-2xl" />
+            </button>
+            <h2 className="text-xl sm:text-2xl font-bold text-[#422006]">
+              Your Cart
+            </h2>
+            <div className="w-8" /> {/* For balance */}
+          </div>
+
+          {/* Cart Items */}
+          <div className="space-y-2 mb-24">
+            {cartItems.map((item) => (
+              <div
+                key={item.id}
+                className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all p-2.5 border border-[#FF9D23]/10"
+              >
+                <div className="flex gap-3">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg object-cover"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="font-semibold text-[#422006] text-sm">
+                          {item.name}
+                        </h3>
+                        <div className="flex items-center gap-1 mt-0.5">
+                          <span className="text-[#FF9D23] text-xs">⭐</span>
+                          <span className="text-[#422006]/60 text-xs">
+                            {item.rating}
+                          </span>
+                        </div>
+                        <p className="font-semibold text-[#FF9D23] text-sm mt-0.5">
+                          ₹{item.price.toFixed(2)}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => updateQuantity(item.id, -1)}
+                          className="w-6 h-6 flex items-center justify-center bg-[#FF9D23]/10 text-[#FF9D23] rounded-lg hover:bg-[#FF9D23]/20 active:bg-[#FF9D23]/30 transition-all"
+                        >
+                          <span className="text-base font-semibold">-</span>
+                        </button>
+                        <span className="w-4 text-center text-sm font-medium text-[#422006]">
+                          {item.quantity}
+                        </span>
+                        <button
+                          onClick={() => updateQuantity(item.id, 1)}
+                          className="w-6 h-6 flex items-center justify-center bg-[#FF9D23]/10 text-[#FF9D23] rounded-lg hover:bg-[#FF9D23]/20 active:bg-[#FF9D23]/30 transition-all"
+                        >
+                          <span className="text-base font-semibold">+</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <p className="text-lg font-semibold text-green-500">
-                Rs.{item.price.toFixed(2)}
-              </p>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
 
-        {/* Footer */}
-        <div className="fixed bottom-0 left-0 w-full bg-white shadow-md p-4 border-t">
-          <div className="flex justify-between items-center text-lg font-semibold">
-            <span>To Pay:</span>
-            <span className="text-green-500 text-2xl">
-              Rs.{totalPrice.toFixed(2)}
-            </span>
-          </div>
-          <div className="flex justify-between items-center text-gray-500 mt-2">
-            <div className="flex items-center space-x-2">
-              <span>⏳</span>
-              <span>Waiting Time</span>
+          {/* Footer */}
+          <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#FF9D23]/10">
+            <div className="max-w-2xl mx-auto p-2 space-y-1.5">
+              {/* Price Details */}
+              <div className="flex justify-between text-[#422006] font-semibold text-base pb-1.5 border-b border-[#FF9D23]/10">
+                <span>Total Amount</span>
+                <span className="text-[#FF9D23]">₹{totalPrice.toFixed(2)}</span>
+              </div>
+
+              {/* Delivery Time */}
+              <div className="flex justify-between items-center py-1 px-2 bg-[#FF9D23]/5 rounded-lg">
+                <div className="flex items-center gap-1.5 text-[#422006]">
+                  <span className="text-base">⏳</span>
+                  <span className="text-xs">Estimated Delivery Time</span>
+                </div>
+                <span className="font-semibold text-[#FF9D23] text-sm">
+                  45 mins
+                </span>
+              </div>
+
+              {/* Payment Buttons */}
+              <div className="flex gap-2 mt-1.5">
+                <button
+                  onClick={handleClickOpen}
+                  className="flex-1 py-2 rounded-lg text-[#422006] border border-[#FF9D23]/20 hover:bg-[#FF9D23]/5 transition-colors text-xs font-semibold"
+                >
+                  Pay at Counter
+                </button>
+                <button className="flex-1 py-2 rounded-lg bg-[#FF9D23] text-white hover:bg-[#FF9D23] transition-colors text-xs font-semibold">
+                  Pay Online
+                </button>
+              </div>
             </div>
-            <span>45 Mins</span>
-          </div>
-          <div className="flex gap-2">
-            <button
-              onClick={handleClickOpen}
-              className="flex-6  text-gray-600 border border-r-gray-600 py-2 mt-3 rounded-lg text-lg font-semibold"
-            >
-              Pay on Counter
-            </button>
-            <button className="flex-6 bg-green-500 text-white py-2 mt-3 rounded-lg text-lg font-semibold">
-              Pay Online
-            </button>
           </div>
         </div>
       </div>
