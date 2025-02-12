@@ -225,16 +225,27 @@ function MenuItems() {
           {foodItems?.map((recipe) => (
             <div
               key={recipe._id}
-              className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all p-3 sm:p-4 border border-[#FF9D23]/10 group hover:bg-white"
+              className={`bg-white rounded-xl shadow-sm hover:shadow-md transition-all p-3 sm:p-4 border border-[#FF9D23]/10 group hover:bg-white relative ${
+                !recipe.available ? "grayscale" : ""
+              }`}
             >
+              {/* Unavailable Overlay */}
+              {!recipe.available && (
+                <div className="absolute inset-0 bg-black/5 rounded-xl z-10" />
+              )}
+
               <div className="flex gap-3 sm:gap-4">
                 {/* Image */}
                 <div className="relative group flex-shrink-0">
                   <img
                     src={recipe.image}
                     alt={recipe.name}
-                    onClick={() => handleOpen(recipe)}
-                    className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg object-cover cursor-pointer group-hover:opacity-90 transition-opacity"
+                    onClick={() => recipe.available && handleOpen(recipe)}
+                    className={`w-20 h-20 sm:w-24 sm:h-24 rounded-lg object-cover ${
+                      recipe.available
+                        ? "cursor-pointer group-hover:opacity-90"
+                        : "cursor-not-allowed"
+                    } transition-opacity`}
                   />
                   <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2">
                     <BiFoodTag
@@ -258,44 +269,56 @@ function MenuItems() {
                       <h3 className="font-semibold text-[#422006] text-sm sm:text-base truncate">
                         {recipe.name}
                       </h3>
-                      <p className="text-xs sm:text-sm text-[#422006]/60 mt-0.5 sm:mt-1 line-clamp-2">
-                        {recipe.description}
-                      </p>
+                      {recipe.available ? (
+                        <p className="text-xs sm:text-sm text-[#422006]/60 mt-0.5 sm:mt-1 line-clamp-2">
+                          {recipe.description}
+                        </p>
+                      ) : (
+                        <p className="text-xs sm:text-sm text-red-500 mt-0.5 sm:mt-1">
+                          Not available today, come tomorrow after 10 AM
+                        </p>
+                      )}
                       <p className="font-semibold text-[#FF9D23] text-sm sm:text-base mt-1">
                         ₹{recipe.price}
                       </p>
                     </div>
                     <div className="text-right flex-shrink-0">
-                      {getItemQuantity(recipe._id) > 0 ? (
-                        <div className="mt-1.5 sm:mt-2 flex items-center justify-end gap-2">
+                      {recipe.available ? (
+                        getItemQuantity(recipe._id) > 0 ? (
+                          <div className="mt-1.5 sm:mt-2 flex items-center justify-end gap-2">
+                            <button
+                              onClick={() =>
+                                handleUpdateQuantity(recipe, "decrease")
+                              }
+                              className="w-7 h-7 flex items-center justify-center bg-[#FF9D23]/10 text-[#FF9D23] rounded-lg hover:bg-[#FF9D23]/20 active:bg-[#FF9D23]/30 transition-all"
+                            >
+                              <span className="text-lg font-semibold">-</span>
+                            </button>
+                            <span className="w-5 text-center text-sm font-medium text-[#422006]">
+                              {getItemQuantity(recipe._id)}
+                            </span>
+                            <button
+                              onClick={() =>
+                                handleUpdateQuantity(recipe, "increase")
+                              }
+                              className="w-7 h-7 flex items-center justify-center bg-[#FF9D23]/10 text-[#FF9D23] rounded-lg hover:bg-[#FF9D23]/20 active:bg-[#FF9D23]/30 transition-all"
+                            >
+                              <span className="text-lg font-semibold">+</span>
+                            </button>
+                          </div>
+                        ) : (
                           <button
-                            onClick={() =>
-                              handleUpdateQuantity(recipe, "decrease")
-                            }
-                            className="w-7 h-7 flex items-center justify-center bg-[#FF9D23]/10 text-[#FF9D23] rounded-lg hover:bg-[#FF9D23]/20 active:bg-[#FF9D23]/30 transition-all"
+                            onClick={() => handleAddToCart(recipe)}
+                            className="mt-1.5 sm:mt-2 px-3 sm:px-4 py-1.5 sm:py-1.5 text-xs sm:text-sm bg-[#FF9D23] text-white rounded-lg hover:bg-[#FF9D23] active:bg-[#FF9D23] transition-all flex items-center gap-1.5 sm:gap-2"
                           >
-                            <span className="text-lg font-semibold">-</span>
+                            <FaShoppingCart size={12} />
+                            Add
                           </button>
-                          <span className="w-5 text-center text-sm font-medium text-[#422006]">
-                            {getItemQuantity(recipe._id)}
-                          </span>
-                          <button
-                            onClick={() =>
-                              handleUpdateQuantity(recipe, "increase")
-                            }
-                            className="w-7 h-7 flex items-center justify-center bg-[#FF9D23]/10 text-[#FF9D23] rounded-lg hover:bg-[#FF9D23]/20 active:bg-[#FF9D23]/30 transition-all"
-                          >
-                            <span className="text-lg font-semibold">+</span>
-                          </button>
-                        </div>
+                        )
                       ) : (
-                        <button
-                          onClick={() => handleAddToCart(recipe)}
-                          className="mt-1.5 sm:mt-2 px-3 sm:px-4 py-1.5 sm:py-1.5 text-xs sm:text-sm bg-[#FF9D23] text-white rounded-lg hover:bg-[#FF9D23] active:bg-[#FF9D23] transition-all flex items-center gap-1.5 sm:gap-2"
-                        >
-                          <FaShoppingCart size={12} />
-                          Add
-                        </button>
+                        <span className="mt-1.5 sm:mt-2 px-3 sm:px-4 py-1.5 sm:py-1.5 text-xs sm:text-sm bg-gray-100 text-gray-500 rounded-lg inline-block">
+                          Not Available
+                        </span>
                       )}
                     </div>
                   </div>
