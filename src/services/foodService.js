@@ -1,15 +1,41 @@
 // ✅ Get All Food Items
 import axios from "axios";
 
-export const getFoodItems = async () => {
+export const getFoodItems = async (
+  restaurantId,
+  {
+    page = 1,
+
+    limit,
+
+    search = "",
+
+    category = "",
+  }
+) => {
   try {
+    // Build query parameters
+
+    const params = new URLSearchParams({
+      page,
+
+      limit,
+    });
+
+    // Add optional parameters if they exist
+
+    if (search) params.append("search", search);
+
+    if (category) params.append("category", category);
+
     const response = await axios.get(
-      `${import.meta.env.VITE_BASE_URL}/api/food-items`
+      `${
+        import.meta.env.VITE_BASE_URL
+      }/api/food-items?restaurantId=${restaurantId}&${params}`
     );
+
     return response.data;
   } catch (error) {
-    document.write(error.message);
-    console.error("Error fetching food items:", error);
     throw error;
   }
 };

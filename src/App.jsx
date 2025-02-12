@@ -32,7 +32,7 @@ const appRouter = createBrowserRouter([
     // errorElement: <ErrorPage />,
   },
   {
-    path: "/:hotel_name/:tableNo/menu",
+    path: "/menu/:restaurantId/:tableNo",
     element: (
       <Suspense fallback={<Fallback />}>
         <ErrorBoundary>
