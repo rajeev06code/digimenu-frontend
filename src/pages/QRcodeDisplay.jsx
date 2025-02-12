@@ -15,7 +15,7 @@ function QRcodeDisplay() {
         // "https://digimenu-backend-uuw2.onrender.com/api/qr-code/create",
         "http://localhost:3000/api/qr-code/create",
         {
-          restaurantName: "Vijay Sweets",
+          restaurantName: "Kranti Hotel",
           tableNo: 4,
         }
       );
