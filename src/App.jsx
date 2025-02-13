@@ -5,6 +5,7 @@ import CartItems from "./pages/CartItems";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import ErrorBoundary from "../src/error/ErrorBoundary";
 import SuccessPage from "./pages/SuccessPage";
+import { CartProvider } from "./context/CartContext";
 
 // Lazy-loaded components
 const QRcodeDisplay = lazy(() => import("./pages/QRcodeDisplay"));
@@ -58,7 +59,11 @@ const appRouter = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={appRouter} />;
+  return (
+    <CartProvider>
+      <RouterProvider router={appRouter} />
+    </CartProvider>
+  );
 }
 
 export default App;

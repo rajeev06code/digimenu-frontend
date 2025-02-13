@@ -1,20 +1,23 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useMemo, memo } from "react";
 import { FaHeart, FaSearch, FaShoppingCart } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import { BiFoodTag } from "react-icons/bi";
 import debounce from "lodash/debounce";
 import { getFoodItems } from "../services/foodService";
 import BottomDrawer from "../components/view/Drawer";
+import { useCart } from "../context/CartContext";
+import CartButton from "../components/buttons/CartButton";
+import RecipeCard from "../components/cards/RecipeCard";
 
 function MenuItems() {
-  const { restaurantId, tableNo } = useParams(); // Get restaurantId from URL params
+  const { restaurantId, tableNo } = useParams();
+  const navigate = useNavigate();
+  const { initializeCart, addToCart, cartItems, updateQuantity } = useCart();
   const [search, setSearch] = useState("");
-  const [cartItems, setCartItems] = useState([]);
   const [open, setOpen] = useState(false);
   const [recipeDetails, setRecipeDetails] = useState({});
 
   const handleClose = () => setOpen(false);
-  const navigate = useNavigate();
 
   const [foodItems, setFoodItems] = useState([]);
   // ================================================================
@@ -31,6 +34,27 @@ function MenuItems() {
   });
 
   const loadingRef = useRef(null);
+
+  // Initialize cart once when component mounts
+  useEffect(() => {
+    if (restaurantId && tableNo) {
+      const tableInfo = { restaurantId, tableNo };
+      localStorage.setItem("tableInfo", JSON.stringify(tableInfo));
+      initializeCart(restaurantId, tableNo);
+    }
+  }, [restaurantId, tableNo]); // Remove initializeCart from dependencies
+
+  const getItemQuantity = (recipeId) => {
+    const item = cartItems.find((item) => item._id === recipeId);
+    return item ? item.quantity : 0;
+  };
+
+  const handleAddToCart = (recipe) => {
+    addToCart({
+      ...recipe,
+      price: Number(recipe.price),
+    });
+  };
 
   // Debounced search function
   const debouncedSearch = useCallback(
@@ -129,53 +153,14 @@ function MenuItems() {
     debouncedSearch(e.target.value);
   };
 
-  const getItemQuantity = (recipeId) => {
-    const item = cartItems.find((item) => item._id === recipeId);
-    return item ? item.quantity : 0;
-  };
-
-  const handleUpdateQuantity = (recipe, action) => {
-    setCartItems((prevItems) => {
-      const existingItem = prevItems.find((item) => item._id === recipe._id);
-
-      if (action === "decrease") {
-        if (existingItem.quantity === 1) {
-          // Remove item if quantity becomes 0
-          return prevItems.filter((item) => item._id !== recipe._id);
-        }
-        // Decrease quantity
-        return prevItems.map((item) =>
-          item._id === recipe._id
-            ? { ...item, quantity: item.quantity - 1 }
-            : item
-        );
-      }
-
-      if (existingItem) {
-        // Increase quantity
-        return prevItems.map((item) =>
-          item._id === recipe._id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-
-      // Add new item
-      return [...prevItems, { ...recipe, quantity: 1 }];
-    });
-  };
-
-  const handleAddToCart = (recipe) => {
-    handleUpdateQuantity(recipe, "increase");
-  };
-
   const handleViewCart = () => {
-    navigate("/cart"); // Navigate to the cart page
+    navigate("/cart");
   };
   const handleOpen = (recipeDetails) => {
     setOpen(true);
     setRecipeDetails(recipeDetails);
   };
+
   return (
     <div className="bg-[#FFFAF4] min-h-screen">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-4">
@@ -223,108 +208,14 @@ function MenuItems() {
         {/* Recipe List */}
         <div className="space-y-3 sm:space-y-4">
           {foodItems?.map((recipe) => (
-            <div
+            <RecipeCard
               key={recipe._id}
-              className={`bg-white rounded-xl shadow-sm hover:shadow-md transition-all p-3 sm:p-4 border border-[#FF9D23]/10 group hover:bg-white relative ${
-                !recipe.available ? "grayscale" : ""
-              }`}
-            >
-              {/* Unavailable Overlay */}
-              {!recipe.available && (
-                <div className="absolute inset-0 bg-black/5 rounded-xl z-10" />
-              )}
-
-              <div className="flex gap-3 sm:gap-4">
-                {/* Image */}
-                <div className="relative group flex-shrink-0">
-                  <img
-                    src={recipe.image}
-                    alt={recipe.name}
-                    onClick={() => recipe.available && handleOpen(recipe)}
-                    className={`w-20 h-20 sm:w-24 sm:h-24 rounded-lg object-cover ${
-                      recipe.available
-                        ? "cursor-pointer group-hover:opacity-90"
-                        : "cursor-not-allowed"
-                    } transition-opacity`}
-                  />
-                  <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2">
-                    <BiFoodTag
-                      className={`${
-                        recipe.category === "veg" ||
-                        recipe.category === "beverage"
-                          ? "text-green-500"
-                          : recipe.category === "non-veg"
-                          ? "text-red-500"
-                          : ""
-                      } bg-white rounded-full p-0.5 sm:p-1 shadow-sm`}
-                      size={16}
-                    />
-                  </div>
-                </div>
-
-                {/* Details */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex justify-between items-start gap-2">
-                    <div className="min-w-0">
-                      <h3 className="font-semibold text-[#422006] text-sm sm:text-base truncate">
-                        {recipe.name}
-                      </h3>
-                      {recipe.available ? (
-                        <p className="text-xs sm:text-sm text-[#422006]/60 mt-0.5 sm:mt-1 line-clamp-2">
-                          {recipe.description}
-                        </p>
-                      ) : (
-                        <p className="text-xs sm:text-sm text-red-500 mt-0.5 sm:mt-1">
-                          Not available today, come tomorrow after 10 AM
-                        </p>
-                      )}
-                      <p className="font-semibold text-[#FF9D23] text-sm sm:text-base mt-1">
-                        ₹{recipe.price}
-                      </p>
-                    </div>
-                    <div className="text-right flex-shrink-0">
-                      {recipe.available ? (
-                        getItemQuantity(recipe._id) > 0 ? (
-                          <div className="mt-1.5 sm:mt-2 flex items-center justify-end gap-2">
-                            <button
-                              onClick={() =>
-                                handleUpdateQuantity(recipe, "decrease")
-                              }
-                              className="w-7 h-7 flex items-center justify-center bg-[#FF9D23]/10 text-[#FF9D23] rounded-lg hover:bg-[#FF9D23]/20 active:bg-[#FF9D23]/30 transition-all"
-                            >
-                              <span className="text-lg font-semibold">-</span>
-                            </button>
-                            <span className="w-5 text-center text-sm font-medium text-[#422006]">
-                              {getItemQuantity(recipe._id)}
-                            </span>
-                            <button
-                              onClick={() =>
-                                handleUpdateQuantity(recipe, "increase")
-                              }
-                              className="w-7 h-7 flex items-center justify-center bg-[#FF9D23]/10 text-[#FF9D23] rounded-lg hover:bg-[#FF9D23]/20 active:bg-[#FF9D23]/30 transition-all"
-                            >
-                              <span className="text-lg font-semibold">+</span>
-                            </button>
-                          </div>
-                        ) : (
-                          <button
-                            onClick={() => handleAddToCart(recipe)}
-                            className="mt-1.5 sm:mt-2 px-3 sm:px-4 py-1.5 sm:py-1.5 text-xs sm:text-sm bg-[#FF9D23] text-white rounded-lg hover:bg-[#FF9D23] active:bg-[#FF9D23] transition-all flex items-center gap-1.5 sm:gap-2"
-                          >
-                            <FaShoppingCart size={12} />
-                            Add
-                          </button>
-                        )
-                      ) : (
-                        <span className="mt-1.5 sm:mt-2 px-3 sm:px-4 py-1.5 sm:py-1.5 text-xs sm:text-sm bg-gray-100 text-gray-500 rounded-lg inline-block">
-                          Not Available
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+              recipe={recipe}
+              quantity={getItemQuantity(recipe._id)}
+              onAdd={handleAddToCart}
+              onUpdate={updateQuantity}
+              onOpen={handleOpen}
+            />
           ))}
 
           {/* Loading indicator and intersection observer reference */}
